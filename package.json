@@ -1,0 +1,22 @@
+{
+  "name": "agentic-auto-correct-monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r --filter=./packages/* run build",
+    "test": "pnpm -r --filter=./packages/* run test",
+    "typecheck": "pnpm -r --filter=./packages/* run typecheck",
+    "lint": "eslint .",
+    "changeset": "changeset",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.6.0",
+    "vitest": "^4.1.10"
+  },
+  "packageManager": "pnpm@11.5.2"
+}

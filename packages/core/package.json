@@ -1,0 +1,58 @@
+{
+  "name": "agentic-auto-correct",
+  "version": "0.1.0",
+  "description": "Spelling and grammar auto-correction for text inputs, with an optional pluggable AI adapter.",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MIT",
+  "keywords": ["spell-check", "grammar", "autocorrect", "textarea", "input"],
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+    },
+    "./spell": {
+      "import": { "types": "./dist/spell.d.ts", "default": "./dist/spell.js" },
+      "require": { "types": "./dist/spell.d.cts", "default": "./dist/spell.cjs" }
+    },
+    "./grammar": {
+      "import": { "types": "./dist/grammar.d.ts", "default": "./dist/grammar.js" },
+      "require": { "types": "./dist/grammar.d.cts", "default": "./dist/grammar.cjs" }
+    },
+    "./listener": {
+      "import": { "types": "./dist/listener.d.ts", "default": "./dist/listener.js" },
+      "require": { "types": "./dist/listener.d.cts", "default": "./dist/listener.cjs" }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dictionary-en": "^4.0.0",
+    "nspell": "^2.1.5",
+    "retext": "^9.0.0",
+    "retext-passive": "^5.0.0",
+    "retext-repeated-words": "^5.0.0",
+    "retext-sentence-spacing": "^6.0.0",
+    "retext-stringify": "^4.0.0",
+    "retext-english": "^5.0.0",
+    "unified": "^11.0.5",
+    "vfile": "^6.0.0",
+    "vfile-message": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/nspell": "^2.1.0",
+    "happy-dom": "^15.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.6.0",
+    "vitest": "^4.1.10"
+  }
+}
