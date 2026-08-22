@@ -19,18 +19,21 @@ export function useAutoCorrect(
   const correctorRef = useRef<AutoCorrector | null>(null);
   if (!correctorRef.current) correctorRef.current = new AutoCorrector(config);
 
+  // Keep debounce always-fresh without making it a dep of the text effect.
+  const debounceRef = useRef(config?.debounce ?? 300);
+  debounceRef.current = config?.debounce ?? 300;
+
   const [result, setResult] = useState<CorrectionResult | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     correctorRef.current?.updateConfig(config ?? {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config]);
 
   useEffect(() => {
     let cancelled = false;
-    const debounceMs = config?.debounce ?? 300;
+    const debounceMs = debounceRef.current;
 
     setIsChecking(true);
     const timer = setTimeout(() => {
@@ -54,7 +57,6 @@ export function useAutoCorrect(
       cancelled = true;
       clearTimeout(timer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
   useEffect(() => () => correctorRef.current?.destroy(), []);

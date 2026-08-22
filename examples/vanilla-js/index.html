@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>agentic-auto-correct — vanilla JS demo</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 680px;
+        margin: 3rem auto;
+        padding: 0 1rem;
+        color: #1a1a1a;
+      }
+      h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+      p.subtitle { color: #666; margin-top: 0; }
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        font-size: 1rem;
+        line-height: 1.6;
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        resize: vertical;
+        box-sizing: border-box;
+      }
+      textarea:focus { outline: 2px solid #4f46e5; border-color: transparent; }
+      #status { margin-top: 0.5rem; font-size: 0.85rem; color: #666; min-height: 1.2em; }
+      #issues { margin-top: 1rem; }
+      .issue {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 5px;
+        background: #f9f9f9;
+        border-left: 3px solid #ccc;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .issue[data-type="spelling"] { border-color: #ef4444; background: #fef2f2; }
+      .issue[data-type="grammar"]  { border-color: #f59e0b; background: #fffbeb; }
+      .original { font-weight: 600; }
+      .arrow { color: #888; }
+      .suggestion {
+        color: #16a34a;
+        cursor: pointer;
+        text-decoration: underline dotted;
+      }
+      .suggestion:hover { text-decoration: underline solid; }
+      .msg { color: #555; }
+    </style>
+  </head>
+  <body>
+    <h1>agentic-auto-correct</h1>
+    <p class="subtitle">Offline spelling and grammar checking. Type below — issues appear after you stop typing.</p>
+
+    <textarea id="editor" placeholder="Try: &quot;I liek turtles. The the sky is beutiful.&quot;">I liek turtles. The the sky is beutiful.</textarea>
+
+    <div id="status">Checking…</div>
+    <div id="issues"></div>
+
+    <script type="module">
+      // In a real project these would be bare imports from npm.
+      // This demo resolves the built dist directly from the monorepo.
+      import { attachAutoCorrect } from "../../packages/core/dist/index.js";
+
+      const editor  = document.getElementById("editor");
+      const status  = document.getElementById("status");
+      const issuesEl = document.getElementById("issues");
+
+      function renderIssues(result) {
+        status.textContent = result.issues.length === 0
+          ? "No issues found."
+          : `${result.issues.length} issue${result.issues.length === 1 ? "" : "s"} found.`;
+
+        issuesEl.innerHTML = "";
+
+        for (const issue of result.issues) {
+          const el = document.createElement("div");
+          el.className = "issue";
+          el.dataset.type = issue.type;
+
+          const original = `<span class="original">${issue.original}</span>`;
+          const suggestions = issue.suggestions.slice(0, 3).map((s) =>
+            `<span class="suggestion" data-word="${s}">${s}</span>`
+          ).join(", ");
+
+          el.innerHTML = `
+            <span>${issue.type}</span>
+            ${original}
+            ${suggestions ? `<span class="arrow">→</span> ${suggestions}` : ""}
+            <span class="msg">${issue.message}</span>
+          `;
+
+          // Clicking a suggestion applies it in the textarea
+          el.querySelectorAll(".suggestion").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const text = editor.value;
+              editor.value =
+                text.slice(0, issue.range.start) +
+                btn.dataset.word +
+                text.slice(issue.range.end);
+              editor.dispatchEvent(new Event("input"));
+            });
+          });
+
+          issuesEl.appendChild(el);
+        }
+      }
+
+      const listener = attachAutoCorrect(editor, {
+        debounce: 400,
+        onStart:  () => { status.textContent = "Checking…"; },
+        onResult: renderIssues,
+        onError:  (err) => { status.textContent = `Error: ${err.message}`; },
+      });
+
+      // Run an immediate check on load
+      listener.flush();
+    </script>
+  </body>
+</html>
