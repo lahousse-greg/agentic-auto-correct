@@ -15,7 +15,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write  # required for npm provenance
+      id-token: write  # required for npm Trusted Publishing (OIDC)
 
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +29,6 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -45,4 +44,7 @@ jobs:
           commit: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # No NPM token: publishing authenticates via npm Trusted Publishing
+          # (OIDC), using the id-token: write permission granted above. Each
+          # package must have a Trusted Publisher configured on npmjs.com
+          # pointing at this repo + this workflow file before this works.
