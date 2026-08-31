@@ -48,3 +48,8 @@ jobs:
           # (OIDC), using the id-token: write permission granted above. Each
           # package must have a Trusted Publisher configured on npmjs.com
           # pointing at this repo + this workflow file before this works.
+          #
+          # provenance is set here (not in a committed .npmrc) so it only
+          # applies in CI — a local `pnpm publish` has no OIDC token and
+          # would fail if provenance were forced on outside this workflow.
+          NPM_CONFIG_PROVENANCE: "true"
