@@ -5,6 +5,11 @@
   "type": "module",
   "sideEffects": false,
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lahousse-greg/agentic-auto-correct.git",
+    "directory": "packages/adapter-openai"
+  },
   "files": ["dist"],
   "exports": {
     ".": {
