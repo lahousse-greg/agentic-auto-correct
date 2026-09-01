@@ -1,6 +1,6 @@
 {
   "name": "@agentic-auto-correct/react",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "React hooks for agentic-auto-correct.",
   "type": "module",
   "sideEffects": false,

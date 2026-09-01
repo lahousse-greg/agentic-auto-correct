@@ -1,6 +1,6 @@
 {
   "name": "@agentic-auto-correct/adapter-anthropic",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Anthropic Claude adapter for agentic-auto-correct.",
   "type": "module",
   "sideEffects": false,
