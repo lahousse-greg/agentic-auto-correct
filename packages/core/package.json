@@ -1,6 +1,6 @@
 {
   "name": "agentic-auto-correct",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Spelling and grammar auto-correction for text inputs, with an optional pluggable AI adapter.",
   "type": "module",
   "sideEffects": false,
