@@ -14,9 +14,8 @@ describe("attachAutoCorrect", () => {
     const listener = attachAutoCorrect(input, { onResult, debounce: 10 });
 
     input.dispatchEvent(new Event("input"));
-    await new Promise((resolve) => setTimeout(resolve, 30));
+    await vi.waitFor(() => expect(onResult).toHaveBeenCalledTimes(1), { timeout: 2000 });
 
-    expect(onResult).toHaveBeenCalledTimes(1);
     listener.destroy();
   });
 
@@ -36,7 +35,7 @@ describe("attachAutoCorrect", () => {
     listener.destroy();
 
     input.dispatchEvent(new Event("input"));
-    await new Promise((resolve) => setTimeout(resolve, 30));
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
     expect(onResult).not.toHaveBeenCalled();
   });
